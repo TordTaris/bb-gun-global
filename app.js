@@ -1,13 +1,16 @@
-document.getElementById('year').textContent = new Date().getFullYear();
-const search = document.getElementById('venue-search');
-const results = document.getElementById('venue-results');
-document.getElementById('search-btn').addEventListener('click', () => {
-  const query = search.value.trim();
-  results.innerHTML = query
-    ? '<div class="search-empty"><p class="eyebrow">NO VERIFIED LISTINGS YET</p><h3>We are building the network in your area.</h3><p>Try again later as local venues and compliance reviews are added.</p></div>'
-    : '<div class="search-empty"><p>Please enter a city, country or venue name.</p></div>';
-});
-search.addEventListener('keydown', event => { if (event.key === 'Enter') document.getElementById('search-btn').click(); });
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
-}
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.58.0';
+const supabase=createClient('https://jtckadonwzdlzxyiighv.supabase.co','sb_publishable_qu8VnT7l-rSZ4wpNwR6eFA_lzSurBgf');
+const $=id=>document.getElementById(id); $('year').textContent=new Date().getFullYear();
+let mode='signin'; document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('auth-submit').textContent=mode==='signup'?'Create account':'Sign in';}));
+const msg=(id,t,e=false)=>{const n=$(id);n.textContent=t;n.dataset.state=e?'error':'success';};
+async function session(){const {data:{session}}=await supabase.auth.getSession();$('auth-panel').hidden=!!session;$('member-panel').hidden=!session;$('member-email').textContent=session?.user?.email||'';return session;}
+$('auth-form').addEventListener('submit',async e=>{e.preventDefault();$('auth-submit').disabled=true;const email=$('auth-email').value.trim(),password=$('auth-password').value;const r=mode==='signup'?await supabase.auth.signUp({email,password}):await supabase.auth.signInWithPassword({email,password});$('auth-submit').disabled=false;if(r.error){msg('auth-message',r.error.message,true);return;}msg('auth-message',mode==='signup'&&!r.data.session?'Account created. Check your email to confirm, then sign in.':'Signed in.');await session();});
+$('signout-btn').addEventListener('click',async()=>{const r=await supabase.auth.signOut();if(r.error)msg('auth-message',r.error.message,true);else{msg('auth-message','Signed out.');await session();}});
+$('partner-form').addEventListener('submit',async e=>{e.preventDefault();const s=await session();if(!s){msg('partner-message','Please sign in first.',true);$('account').scrollIntoView({behavior:'smooth'});return;}const row={user_id:s.user.id,organization_name:$('partner-name').value.trim(),partner_type:$('partner-type').value,country_code:$('partner-country').value.trim().toUpperCase(),website_url:$('partner-website').value.trim()||null};const r=await supabase.from('partner_applications').insert(row);if(r.error)msg('partner-message',r.error.message,true);else{$('partner-form').reset();msg('partner-message','Application submitted: pending review. This is not transaction approval.');}});
+function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+function render(rows){const root=$('venue-results');if(!rows.length){root.innerHTML='<div class="search-empty"><p class="eyebrow">NO VERIFIED LISTINGS YET</p><h3>We are building the network in your area.</h3><p>Listings appear after compliance approval.</p></div>';return;}root.innerHTML=rows.map((v,i)=>'<article class="venue-card"><div class="venue-art art-'+['one','two','three'][i%3]+'">'+String(i+1).padStart(2,'0')+' <span>VERIFIED DIRECTORY</span></div><div class="venue-info"><small>'+esc(v.venue_type.replaceAll('_',' ').toUpperCase())+'</small><h3>'+esc(v.venue_name)+'</h3><p>'+esc([v.city,v.region,v.country_code].filter(Boolean).join(', '))+'</p><span class="tag">Compliance approved</span></div></article>').join('');}
+async function fetchVenues(q=''){const r=await supabase.from('venue_directory').select('venue_name,venue_type,country_code,city,region').eq('is_published',true).eq('compliance_status','approved').order('venue_name');if(r.error){console.warn(r.error.message);return;}render((r.data||[]).filter(v=>[v.venue_name,v.country_code,v.city,v.region].some(x=>String(x||'').toLowerCase().includes(q.toLowerCase()))));}
+$('search-btn').addEventListener('click',()=>fetchVenues($('venue-search').value.trim()));$('venue-search').addEventListener('keydown',e=>{if(e.key==='Enter')fetchVenues($('venue-search').value.trim());});
+async function compliance(){const r=await supabase.from('market_controls').select('transactions_enabled,status,reason').eq('control_key','global').maybeSingle();if(!r.error&&r.data&&!r.data.transactions_enabled){const p=document.createElement('p');p.className='market-lock';p.textContent='GLOBAL TRANSACTIONS LOCKED — '+r.data.reason;document.querySelector('.compliance-list').append(p);}}
+await session();supabase.auth.onAuthStateChange(()=>{session();});await Promise.all([fetchVenues(),compliance()]);
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
