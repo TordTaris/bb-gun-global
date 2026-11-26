@@ -1,159 +1,29 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.58.0';
-
-const supabase = createClient(
-  'https://jtckadonwzdlzxyiighv.supabase.co',
-  'sb_publishable_qu8VnT7l-rSZ4wpNwR6eFA_lzSurBgf'
-);
-const $ = id => document.getElementById(id);
-$('year').textContent = new Date().getFullYear();
-
-const products = [
-  { id:'pistol', name:'BB Pistol', category:'Pistol', description:'Illustrative BB pistol replica category. Check local classification, age restrictions and permitted use.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoft_pistol.jpg' },
-  { id:'rifle', name:'BB Rifle', category:'Rifle', description:'Illustrative BB rifle replica category. Image is a visual reference, not a product offer or legal classification.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/AirsoftG36.jpg' },
-  { id:'smg', name:'BB SMG', category:'SMG', description:'Illustrative compact airsoft replica category. Local rules and permitted use vary by country.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg' },
-  { id:'sniper', name:'BB Sniper-style replica', category:'Sniper', description:'Illustrative long-format replica category. This platform does not assess specifications, performance or legality.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg' }
+const supabase=createClient('https://jtckadonwzdlzxyiighv.supabase.co','sb_publishable_qu8VnT7l-rSZ4wpNwR6eFA_lzSurBgf');
+const $=id=>document.getElementById(id);$('year').textContent=new Date().getFullYear();
+const products=[
+{id:'pistol',name:'BB Pistol รุ่นมาตรฐาน',category:'Pistol',description:'หมวดหมู่ปืนพก BB Gun สำหรับข้อมูลและการศึกษา',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoft_pistol.jpg'},
+{id:'rifle',name:'BB Rifle รุ่นมาตรฐาน',category:'Rifle',description:'หมวดหมู่ปืนไรเฟิล BB Gun สำหรับข้อมูลทั่วไป',image:'https://commons.wikimedia.org/wiki/Special:FilePath/AirsoftG36.jpg'},
+{id:'smg',name:'BB SMG รุ่นมาตรฐาน',category:'SMG',description:'หมวดหมู่ปืนกลมือ BB Gun สำหรับข้อมูลทั่วไป',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg'},
+{id:'sniper',name:'BB Sniper รุ่นมาตรฐาน',category:'Sniper',description:'หมวดหมู่ BB Gun รูปแบบยาวเพื่อการจำแนกข้อมูล',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg'}
 ];
-const categories = ['All', 'Pistol', 'Rifle', 'SMG', 'Sniper'];
-let activeCategory = 'All';
-let mode = 'signin';
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-}
-function setMessage(id, message, isError = false) {
-  const node = $(id);
-  if (!node) return;
-  node.textContent = message;
-  node.dataset.state = isError ? 'error' : 'success';
-}
-function renderCategories() {
-  $('market-categories').innerHTML = categories.map(category =>
-    '<button type="button" class="category-chip ' + (activeCategory === category ? 'active' : '') +
-    '" data-category="' + category + '">' + category + '</button>'
-  ).join('');
-}
-function renderProducts(query = '') {
-  const normalized = query.trim().toLowerCase();
-  const rows = products.filter(product =>
-    (activeCategory === 'All' || product.category === activeCategory) &&
-    (product.name + ' ' + product.category + ' ' + product.description).toLowerCase().includes(normalized)
-  );
-  $('market-products').innerHTML = rows.length ? rows.map(product => `
-    <article class="product-card">
-      <div class="product-photo">
-        <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)} illustrative image" loading="lazy" referrerpolicy="no-referrer">
-        <span>ILLUSTRATIVE REFERENCE</span>
-      </div>
-      <div class="product-copy"><small>BB GUN CATEGORY / ${escapeHtml(product.category.toUpperCase())}</small>
-        <h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.description)}</p>
-        <details><summary>Information &amp; responsible use</summary><p>Images are illustrative only. No stock, price, purchase, rental or fulfilment is offered. Confirm applicable laws and safety requirements with local authorities and the venue.</p></details>
-        <span class="status-pill">INFORMATION ONLY · SALES DISABLED</span>
-      </div>
-    </article>`).join('') : '<div class="empty-state"><span>⌕</span><strong>No matching categories</strong><p>Try another search or select All.</p></div>';
-  $('market-products').querySelectorAll('img').forEach(img => img.addEventListener('error', () => {
-    img.closest('.product-photo')?.classList.add('image-missing');
-    img.remove();
-  }, { once:true }));
-}
-
-document.querySelectorAll('.auth-tab').forEach(button => button.addEventListener('click', () => {
-  mode = button.dataset.mode;
-  document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.toggle('active', tab === button));
-  $('auth-submit').innerHTML = (mode === 'signup' ? 'Create account' : 'Sign in') + ' <span>↗</span>';
-  $('auth-password').autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
-}));
-async function refreshSession() {
-  const { data, error } = await supabase.auth.getSession();
-  if (error) setMessage('auth-message', error.message, true);
-  const session = data?.session;
-  $('auth-panel').hidden = !!session;
-  $('member-panel').hidden = !session;
-  $('member-email').textContent = session?.user?.email || '';
-  return session || null;
-}
-$('auth-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  const button = $('auth-submit');
-  button.disabled = true;
-  setMessage('auth-message', 'Connecting securely…');
-  const email = $('auth-email').value.trim();
-  const password = $('auth-password').value;
-  const result = mode === 'signup'
-    ? await supabase.auth.signUp({ email, password })
-    : await supabase.auth.signInWithPassword({ email, password });
-  button.disabled = false;
-  if (result.error) return setMessage('auth-message', result.error.message, true);
-  setMessage('auth-message', mode === 'signup' && !result.data.session
-    ? 'Account created. Check your email to confirm your address.'
-    : 'You are signed in.');
-  await refreshSession();
-});
-$('signout-btn').addEventListener('click', async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) setMessage('auth-message', error.message, true);
-  else { setMessage('auth-message', 'Signed out.'); await refreshSession(); }
-});
-supabase.auth.onAuthStateChange(() => { refreshSession(); });
-
-$('partner-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  const session = await refreshSession();
-  if (!session) {
-    setMessage('partner-message', 'Please sign in before submitting an application.', true);
-    $('account').scrollIntoView({ behavior:'smooth' });
-    return;
-  }
-  const country = $('partner-country').value.trim().toUpperCase();
-  if (!/^[A-Z]{2}$/.test(country)) return setMessage('partner-message', 'Enter a valid two-letter country code.', true);
-  const row = {
-    user_id: session.user.id,
-    organization_name: $('partner-name').value.trim(),
-    partner_type: $('partner-type').value,
-    country_code: country,
-    website_url: $('partner-website').value.trim() || null
-  };
-  const { error } = await supabase.from('partner_applications').insert(row);
-  if (error) setMessage('partner-message', error.message, true);
-  else { $('partner-form').reset(); setMessage('partner-message', 'Application submitted for review. This is not transaction approval.'); }
-});
-
-async function fetchVenues(query = '') {
-  const root = $('venue-results');
-  const { data, error } = await supabase.from('venue_directory')
-    .select('venue_name,venue_type,country_code,city,region')
-    .eq('is_published', true).eq('compliance_status', 'approved').order('venue_name');
-  if (error) {
-    root.innerHTML = '<div class="empty-state"><strong>Directory temporarily unavailable</strong><p>We could not load approved listings. Please try again later.</p></div>';
-    return;
-  }
-  const q = query.trim().toLowerCase();
-  const rows = (data || []).filter(venue =>
-    [venue.venue_name, venue.venue_type, venue.country_code, venue.city, venue.region]
-      .some(value => String(value || '').toLowerCase().includes(q))
-  );
-  root.innerHTML = rows.length ? rows.map((venue, index) => `
-    <article class="venue-card"><span class="venue-number">${String(index + 1).padStart(2,'0')}</span>
-      <div><small>${escapeHtml((venue.venue_type || 'VENUE').replaceAll('_',' ').toUpperCase())}</small>
-      <h3>${escapeHtml(venue.venue_name)}</h3><p>${escapeHtml([venue.city,venue.region,venue.country_code].filter(Boolean).join(', '))}</p>
-      <span class="status-pill">COMPLIANCE APPROVED LISTING</span></div>
-    </article>`).join('')
-    : '<div class="empty-state"><span>◎</span><strong>No approved venues found</strong><p>Listings appear only after review and publication.</p></div>';
-}
-$('search-btn').addEventListener('click', () => fetchVenues($('venue-search').value));
-$('venue-search').addEventListener('keydown', event => { if (event.key === 'Enter') fetchVenues($('venue-search').value); });
-$('market-search').addEventListener('input', event => renderProducts(event.target.value));
-$('market-categories').addEventListener('click', event => {
-  const category = event.target.dataset.category;
-  if (!category) return;
-  activeCategory = category;
-  renderCategories();
-  renderProducts($('market-search').value);
-});
-
-renderCategories();
-renderProducts();
-await refreshSession();
-await fetchVenues();
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
-}
+const categories=['All','Pistol','Rifle','SMG','Sniper','Shotgun','Other'];let activeCategory='All',mode='signin';
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function message(id,msg,error=false){const n=$(id);if(n){n.textContent=msg;n.dataset.state=error?'error':'success';}}
+function renderCategories(){$('market-categories').innerHTML=categories.map(c=>'<button class="category-chip '+(activeCategory===c?'active':'')+'" data-category="'+c+'" type="button">'+(c==='All'?'ทั้งหมด':c)+'</button>').join('');}
+function renderProducts(query=''){const q=query.trim().toLowerCase();const rows=products.filter(p=>(activeCategory==='All'||p.category===activeCategory)&&(p.name+' '+p.category+' '+p.description).toLowerCase().includes(q));$('market-products').innerHTML=rows.length?rows.map(p=>'<article class="product-card"><div class="product-photo"><img src="'+esc(p.image)+'" alt="'+esc(p.name)+' ภาพประกอบ" loading="lazy"><span>ภาพประกอบ / INFORMATION ONLY</span></div><div class="product-copy"><small>BB GUN CATEGORY</small><h3>'+esc(p.name)+'</h3><p>'+esc(p.description)+'</p><details><summary>รายละเอียด</summary><p>ใช้เพื่อให้ข้อมูลเท่านั้น ไม่ใช่ข้อเสนอขายหรือการยืนยันความถูกต้องตามกฎหมาย</p></details><span class="status-pill">ปิดการซื้อขาย · INFORMATION ONLY</span></div></article>').join(''):'<div class="empty-state">ไม่พบหมวดหมู่ที่ค้นหา</div>';$('market-products').querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.closest('.product-photo')?.classList.add('image-missing');img.remove();},{once:true}));}
+$('market-search').addEventListener('input',e=>renderProducts(e.target.value));
+$('market-categories').addEventListener('click',e=>{const c=e.target.dataset.category;if(!c)return;activeCategory=c;renderCategories();renderProducts($('market-search').value);});
+document.querySelectorAll('.category-tile').forEach(tile=>tile.addEventListener('click',()=>{activeCategory=tile.dataset.filter;renderCategories();renderProducts($('market-search').value);}));
+$('show-all').addEventListener('click',()=>{activeCategory='All';renderCategories();renderProducts($('market-search').value);});
+$('mobile-menu').addEventListener('click',()=>document.querySelector('.main-nav').classList.toggle('open'));
+document.querySelectorAll('.main-nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.main-nav').classList.remove('open')));
+document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('.auth-tab').forEach(t=>t.classList.toggle('active',t===b));$('auth-submit').textContent=mode==='signup'?'สมัครสมาชิก':'เข้าสู่ระบบ';$('auth-password').autocomplete=mode==='signup'?'new-password':'current-password';}));
+async function refreshSession(){const {data,error}=await supabase.auth.getSession();if(error)message('auth-message',error.message,true);const s=data?.session;$('auth-panel').hidden=!!s;$('member-panel').hidden=!s;$('member-email').textContent=s?.user?.email||'';return s||null;}
+$('auth-form').addEventListener('submit',async e=>{e.preventDefault();const b=$('auth-submit');b.disabled=true;message('auth-message','กำลังเชื่อมต่อ...');const email=$('auth-email').value.trim(),password=$('auth-password').value;const r=mode==='signup'?await supabase.auth.signUp({email,password}):await supabase.auth.signInWithPassword({email,password});b.disabled=false;if(r.error)return message('auth-message',r.error.message,true);message('auth-message',mode==='signup'&&!r.data.session?'สมัครแล้ว กรุณาตรวจสอบอีเมลเพื่อยืนยัน':'เข้าสู่ระบบแล้ว');await refreshSession();});
+$('signout-btn').addEventListener('click',async()=>{const {error}=await supabase.auth.signOut();if(error)message('auth-message',error.message,true);else{message('auth-message','ออกจากระบบแล้ว');await refreshSession();}});
+supabase.auth.onAuthStateChange(()=>{refreshSession();});
+$('partner-form').addEventListener('submit',async e=>{e.preventDefault();const s=await refreshSession();if(!s){message('partner-message','กรุณาเข้าสู่ระบบก่อนส่งข้อมูล',true);$('account').scrollIntoView({behavior:'smooth'});return;}const country=$('partner-country').value.trim().toUpperCase();if(!/^[A-Z]{2}$/.test(country))return message('partner-message','กรุณาใส่รหัสประเทศ 2 ตัวอักษร',true);const {error}=await supabase.from('partner_applications').insert({user_id:s.user.id,organization_name:$('partner-name').value.trim(),partner_type:$('partner-type').value,country_code:country,website_url:$('partner-website').value.trim()||null});if(error)message('partner-message',error.message,true);else{$('partner-form').reset();message('partner-message','ส่งข้อมูลเพื่อรอตรวจสอบแล้ว');}});
+async function fetchVenues(){const root=$('venue-results');const {data,error}=await supabase.from('venue_directory').select('venue_name,venue_type,country_code,city,region').eq('is_published',true).eq('compliance_status','approved').order('venue_name');if(error){root.textContent='ไม่สามารถโหลดข้อมูลสนามได้ในขณะนี้';return;}root.innerHTML=data?.length?data.map(v=>'<article class="venue-card"><h3>'+esc(v.venue_name)+'</h3><p>'+esc([v.city,v.region,v.country_code].filter(Boolean).join(', '))+'</p></article>').join(''):'<p>ยังไม่มีสนามที่ผ่านการตรวจสอบและอนุมัติให้เผยแพร่</p>';}
+renderCategories();renderProducts();await refreshSession();await fetchVenues();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
