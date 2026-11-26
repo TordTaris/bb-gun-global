@@ -1,37 +1,159 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.58.0';
-const supabase=createClient('https://jtckadonwzdlzxyiighv.supabase.co','sb_publishable_qu8VnT7l-rSZ4wpNwR6eFA_lzSurBgf');
-const $=id=>document.getElementById(id); $('year').textContent=new Date().getFullYear();
-let mode='signin'; document.querySelectorAll('.auth-tab').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;document.querySelectorAll('.auth-tab').forEach(x=>x.classList.toggle('active',x===b));$('auth-submit').textContent=mode==='signup'?'Create account':'Sign in';}));
-const msg=(id,t,e=false)=>{const n=$(id);n.textContent=t;n.dataset.state=e?'error':'success';};
-async function session(){const {data:{session}}=await supabase.auth.getSession();$('auth-panel').hidden=!!session;$('member-panel').hidden=!session;$('member-email').textContent=session?.user?.email||'';return session;}
-$('auth-form').addEventListener('submit',async e=>{e.preventDefault();$('auth-submit').disabled=true;const email=$('auth-email').value.trim(),password=$('auth-password').value;const r=mode==='signup'?await supabase.auth.signUp({email,password}):await supabase.auth.signInWithPassword({email,password});$('auth-submit').disabled=false;if(r.error){msg('auth-message',r.error.message,true);return;}msg('auth-message',mode==='signup'&&!r.data.session?'Account created. Check your email to confirm, then sign in.':'Signed in.');await session();});
-$('signout-btn').addEventListener('click',async()=>{const r=await supabase.auth.signOut();if(r.error)msg('auth-message',r.error.message,true);else{msg('auth-message','Signed out.');await session();}});
-$('partner-form').addEventListener('submit',async e=>{e.preventDefault();const s=await session();if(!s){msg('partner-message','Please sign in first.',true);$('account').scrollIntoView({behavior:'smooth'});return;}const row={user_id:s.user.id,organization_name:$('partner-name').value.trim(),partner_type:$('partner-type').value,country_code:$('partner-country').value.trim().toUpperCase(),website_url:$('partner-website').value.trim()||null};const r=await supabase.from('partner_applications').insert(row);if(r.error)msg('partner-message',r.error.message,true);else{$('partner-form').reset();msg('partner-message','Application submitted: pending review. This is not transaction approval.');}});
-function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
-function render(rows){const root=$('venue-results');if(!rows.length){root.innerHTML='<div class="search-empty"><p class="eyebrow">NO VERIFIED LISTINGS YET</p><h3>We are building the network in your area.</h3><p>Listings appear after compliance approval.</p></div>';return;}root.innerHTML=rows.map((v,i)=>'<article class="venue-card"><div class="venue-art art-'+['one','two','three'][i%3]+'">'+String(i+1).padStart(2,'0')+' <span>VERIFIED DIRECTORY</span></div><div class="venue-info"><small>'+esc(v.venue_type.replaceAll('_',' ').toUpperCase())+'</small><h3>'+esc(v.venue_name)+'</h3><p>'+esc([v.city,v.region,v.country_code].filter(Boolean).join(', '))+'</p><span class="tag">Compliance approved</span></div></article>').join('');}
-async function fetchVenues(q=''){const r=await supabase.from('venue_directory').select('venue_name,venue_type,country_code,city,region').eq('is_published',true).eq('compliance_status','approved').order('venue_name');if(r.error){console.warn(r.error.message);return;}render((r.data||[]).filter(v=>[v.venue_name,v.country_code,v.city,v.region].some(x=>String(x||'').toLowerCase().includes(q.toLowerCase()))));}
-$('search-btn').addEventListener('click',()=>fetchVenues($('venue-search').value.trim()));$('venue-search').addEventListener('keydown',e=>{if(e.key==='Enter')fetchVenues($('venue-search').value.trim());});
-async function compliance(){const r=await supabase.from('market_controls').select('transactions_enabled,status,reason').eq('control_key','global').maybeSingle();if(!r.error&&r.data&&!r.data.transactions_enabled){const p=document.createElement('p');p.className='market-lock';p.textContent='GLOBAL TRANSACTIONS LOCKED — '+r.data.reason;document.querySelector('.compliance-list').append(p);}}
-await session();supabase.auth.onAuthStateChange(()=>{session();});await Promise.all([fetchVenues(),compliance()]);
-if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
-const marketItems=[
- {id:'bb-replica',name:'Airsoft pistol replica',category:'BB Gun / Airsoft · compliance review',description:'Illustrative catalog image. Exact model classification and local requirements must be verified before any transaction.',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoft_pistol.jpg',credit:'Wikimedia Commons · CC BY-SA 3.0'},
- {id:'airsoft-rifle',name:'Airsoft rifle replica',category:'BB Gun / Airsoft · compliance review',description:'Illustrative catalog image only. No sale, rental or fulfilment is available while legal review is pending.',image:'https://commons.wikimedia.org/wiki/Special:FilePath/AirsoftG36.jpg',credit:'Wikimedia Commons · CC BY-SA / GFDL'},
- {id:'airsoft-display',name:'Airsoft replica collection',category:'BB Gun / Airsoft · compliance review',description:'Illustrative product display. This image is not a live offer or a statement of legal availability.',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg',credit:'Wikimedia Commons · Public domain'},
- {id:'bb-projectiles',name:'BB projectiles',category:'BB Gun / Airsoft · compliance review',description:'Catalog information only. Legal classification and applicable restrictions must be confirmed before any listing or fulfilment.',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Billes.JPG',credit:'Wikimedia Commons · illustrative image',restricted:true},
+
+const supabase = createClient(
+  'https://jtckadonwzdlzxyiighv.supabase.co',
+  'sb_publishable_qu8VnT7l-rSZ4wpNwR6eFA_lzSurBgf'
+);
+const $ = id => document.getElementById(id);
+$('year').textContent = new Date().getFullYear();
+
+const products = [
+  { id:'pistol', name:'BB Pistol', category:'Pistol', description:'Illustrative BB pistol replica category. Check local classification, age restrictions and permitted use.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoft_pistol.jpg' },
+  { id:'rifle', name:'BB Rifle', category:'Rifle', description:'Illustrative BB rifle replica category. Image is a visual reference, not a product offer or legal classification.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/AirsoftG36.jpg' },
+  { id:'smg', name:'BB SMG', category:'SMG', description:'Illustrative compact airsoft replica category. Local rules and permitted use vary by country.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg' },
+  { id:'sniper', name:'BB Sniper-style replica', category:'Sniper', description:'Illustrative long-format replica category. This platform does not assess specifications, performance or legality.', image:'https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg' }
 ];
-let cart=JSON.parse(localStorage.getItem('bbgg_cart')||'[]');
-let activeCategory='All';
-const productCategories=['BB Gun / Airsoft'];
-function productImage(x,small=false){return x.image?'<img class="'+(small?'cart-thumb':'')+'" src="'+esc(x.image)+'" alt="'+esc(x.name)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest(\'.product-photo, .cart-line\')?.classList.add(\'image-missing\');this.remove()">':'<div class="product-art '+(small?'cart-thumb':'')+'">'+esc(x.name.slice(0,2).toUpperCase())+'</div>';}
-const moneylessCart=()=>{const count=cart.reduce((n,x)=>n+x.qty,0);$('cart-count').textContent=count+' item'+(count===1?'':'s');$('cart-lines').innerHTML=cart.length?cart.map(x=>'<div class="cart-line">'+productImage(x,true)+'<span class="cart-item-name">'+esc(x.name)+' × '+x.qty+'</span><button type="button" class="outline-btn" data-remove="'+esc(x.id)+'">Remove</button></div>').join(''):'<p class="cart-empty">Your cart is empty.</p>';localStorage.setItem('bbgg_cart',JSON.stringify(cart));};
-function matchesCategory(x,c){return x.category.toLowerCase().includes('bb gun / airsoft');}
-function renderCategoryFilters(){const host=$('market-categories');if(!host)return;host.innerHTML=productCategories.map(c=>'<button type="button" class="category-chip '+(activeCategory===c?'active':'')+'" data-category="'+esc(c)+'">'+esc(c)+'</button>').join('');}
-function renderProducts(q=''){const root=$('market-products');const rows=marketItems.filter(x=>matchesCategory(x,activeCategory)&&(x.name+' '+x.category+' '+x.description).toLowerCase().includes(q.toLowerCase()));root.innerHTML=rows.map((x,i)=>'<article class="product-card"><div class="product-photo">'+productImage(x)+'<span>ILLUSTRATIVE IMAGE</span></div><div class="product-copy"><small>'+esc(x.category.toUpperCase())+'</small><h3>'+esc(x.name)+'</h3><p>'+esc(x.description)+'</p>'+(x.credit?'<small class="image-credit">'+esc(x.credit)+'</small><br>':'')+'<details class="product-details"><summary>Product information</summary><p>'+esc(x.description)+' Images are illustrative references, not verified stock or product offers.</p></details>'+(x.restricted||x.image&&x.category.includes('compliance')?'<span class="tag">Not available for sale · compliance review</span><br><button class="outline-btn" type="button" disabled>Sales disabled</button>':'<span class="tag">Not available for sale · compliance review</span><br><button class="outline-btn" type="button" disabled>Sales disabled</button>')+'</div></article>').join('')||'<div class="search-empty">No matching listings.</div>';}
-$('market-products').addEventListener('click',e=>{const id=e.target.dataset.add;if(!id)return;const item=marketItems.find(x=>x.id===id);if(!item||item.restricted||item.image&&item.category.includes('compliance'))return;const line=cart.find(x=>x.id===id);if(line)line.qty++;else cart.push({...item,qty:1});moneylessCart();$('cart-panel').hidden=false;});
-$('cart-lines').addEventListener('click',e=>{const id=e.target.dataset.remove;if(!id)return;cart=cart.filter(x=>x.id!==id);moneylessCart();});
-$('market-categories')?.addEventListener('click',e=>{const c=e.target.dataset.category;if(!c)return;activeCategory=c;renderCategoryFilters();renderProducts($('market-search').value);});
-$('market-search').addEventListener('input',e=>renderProducts(e.target.value));
-$('cart-toggle').addEventListener('click',()=>{$('cart-panel').hidden=!$('cart-panel').hidden;});
-$('cart-close').addEventListener('click',()=>$('cart-panel').hidden=true);
-renderCategoryFilters();renderProducts();moneylessCart();
+const categories = ['All', 'Pistol', 'Rifle', 'SMG', 'Sniper'];
+let activeCategory = 'All';
+let mode = 'signin';
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function setMessage(id, message, isError = false) {
+  const node = $(id);
+  if (!node) return;
+  node.textContent = message;
+  node.dataset.state = isError ? 'error' : 'success';
+}
+function renderCategories() {
+  $('market-categories').innerHTML = categories.map(category =>
+    '<button type="button" class="category-chip ' + (activeCategory === category ? 'active' : '') +
+    '" data-category="' + category + '">' + category + '</button>'
+  ).join('');
+}
+function renderProducts(query = '') {
+  const normalized = query.trim().toLowerCase();
+  const rows = products.filter(product =>
+    (activeCategory === 'All' || product.category === activeCategory) &&
+    (product.name + ' ' + product.category + ' ' + product.description).toLowerCase().includes(normalized)
+  );
+  $('market-products').innerHTML = rows.length ? rows.map(product => `
+    <article class="product-card">
+      <div class="product-photo">
+        <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)} illustrative image" loading="lazy" referrerpolicy="no-referrer">
+        <span>ILLUSTRATIVE REFERENCE</span>
+      </div>
+      <div class="product-copy"><small>BB GUN CATEGORY / ${escapeHtml(product.category.toUpperCase())}</small>
+        <h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.description)}</p>
+        <details><summary>Information &amp; responsible use</summary><p>Images are illustrative only. No stock, price, purchase, rental or fulfilment is offered. Confirm applicable laws and safety requirements with local authorities and the venue.</p></details>
+        <span class="status-pill">INFORMATION ONLY · SALES DISABLED</span>
+      </div>
+    </article>`).join('') : '<div class="empty-state"><span>⌕</span><strong>No matching categories</strong><p>Try another search or select All.</p></div>';
+  $('market-products').querySelectorAll('img').forEach(img => img.addEventListener('error', () => {
+    img.closest('.product-photo')?.classList.add('image-missing');
+    img.remove();
+  }, { once:true }));
+}
+
+document.querySelectorAll('.auth-tab').forEach(button => button.addEventListener('click', () => {
+  mode = button.dataset.mode;
+  document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.toggle('active', tab === button));
+  $('auth-submit').innerHTML = (mode === 'signup' ? 'Create account' : 'Sign in') + ' <span>↗</span>';
+  $('auth-password').autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+}));
+async function refreshSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) setMessage('auth-message', error.message, true);
+  const session = data?.session;
+  $('auth-panel').hidden = !!session;
+  $('member-panel').hidden = !session;
+  $('member-email').textContent = session?.user?.email || '';
+  return session || null;
+}
+$('auth-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = $('auth-submit');
+  button.disabled = true;
+  setMessage('auth-message', 'Connecting securely…');
+  const email = $('auth-email').value.trim();
+  const password = $('auth-password').value;
+  const result = mode === 'signup'
+    ? await supabase.auth.signUp({ email, password })
+    : await supabase.auth.signInWithPassword({ email, password });
+  button.disabled = false;
+  if (result.error) return setMessage('auth-message', result.error.message, true);
+  setMessage('auth-message', mode === 'signup' && !result.data.session
+    ? 'Account created. Check your email to confirm your address.'
+    : 'You are signed in.');
+  await refreshSession();
+});
+$('signout-btn').addEventListener('click', async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) setMessage('auth-message', error.message, true);
+  else { setMessage('auth-message', 'Signed out.'); await refreshSession(); }
+});
+supabase.auth.onAuthStateChange(() => { refreshSession(); });
+
+$('partner-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const session = await refreshSession();
+  if (!session) {
+    setMessage('partner-message', 'Please sign in before submitting an application.', true);
+    $('account').scrollIntoView({ behavior:'smooth' });
+    return;
+  }
+  const country = $('partner-country').value.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(country)) return setMessage('partner-message', 'Enter a valid two-letter country code.', true);
+  const row = {
+    user_id: session.user.id,
+    organization_name: $('partner-name').value.trim(),
+    partner_type: $('partner-type').value,
+    country_code: country,
+    website_url: $('partner-website').value.trim() || null
+  };
+  const { error } = await supabase.from('partner_applications').insert(row);
+  if (error) setMessage('partner-message', error.message, true);
+  else { $('partner-form').reset(); setMessage('partner-message', 'Application submitted for review. This is not transaction approval.'); }
+});
+
+async function fetchVenues(query = '') {
+  const root = $('venue-results');
+  const { data, error } = await supabase.from('venue_directory')
+    .select('venue_name,venue_type,country_code,city,region')
+    .eq('is_published', true).eq('compliance_status', 'approved').order('venue_name');
+  if (error) {
+    root.innerHTML = '<div class="empty-state"><strong>Directory temporarily unavailable</strong><p>We could not load approved listings. Please try again later.</p></div>';
+    return;
+  }
+  const q = query.trim().toLowerCase();
+  const rows = (data || []).filter(venue =>
+    [venue.venue_name, venue.venue_type, venue.country_code, venue.city, venue.region]
+      .some(value => String(value || '').toLowerCase().includes(q))
+  );
+  root.innerHTML = rows.length ? rows.map((venue, index) => `
+    <article class="venue-card"><span class="venue-number">${String(index + 1).padStart(2,'0')}</span>
+      <div><small>${escapeHtml((venue.venue_type || 'VENUE').replaceAll('_',' ').toUpperCase())}</small>
+      <h3>${escapeHtml(venue.venue_name)}</h3><p>${escapeHtml([venue.city,venue.region,venue.country_code].filter(Boolean).join(', '))}</p>
+      <span class="status-pill">COMPLIANCE APPROVED LISTING</span></div>
+    </article>`).join('')
+    : '<div class="empty-state"><span>◎</span><strong>No approved venues found</strong><p>Listings appear only after review and publication.</p></div>';
+}
+$('search-btn').addEventListener('click', () => fetchVenues($('venue-search').value));
+$('venue-search').addEventListener('keydown', event => { if (event.key === 'Enter') fetchVenues($('venue-search').value); });
+$('market-search').addEventListener('input', event => renderProducts(event.target.value));
+$('market-categories').addEventListener('click', event => {
+  const category = event.target.dataset.category;
+  if (!category) return;
+  activeCategory = category;
+  renderCategories();
+  renderProducts($('market-search').value);
+});
+
+renderCategories();
+renderProducts();
+await refreshSession();
+await fetchVenues();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+}
