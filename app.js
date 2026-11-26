@@ -15,12 +15,17 @@ async function compliance(){const r=await supabase.from('market_controls').selec
 await session();supabase.auth.onAuthStateChange(()=>{session();});await Promise.all([fetchVenues(),compliance()]);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const marketItems=[
- {id:'eye-protection',name:'Protective eyewear',category:'Field safety',description:'General eye protection for supervised recreational environments.'},
- {id:'field-gloves',name:'Field gloves',category:'Apparel',description:'General-purpose gloves for outdoor activities.'},
- {id:'team-jersey',name:'Team jersey',category:'Apparel',description:'Everyday team apparel and community merchandise.'},
- {id:'first-aid-kit',name:'First-aid kit',category:'Safety',description:'Basic first-aid supplies for activity venues.'},
- {id:'team-cap',name:'Team cap',category:'Apparel',description:'Community cap and team merchandise.'},
- {id:'sports-bag',name:'Sports equipment bag',category:'Accessories',description:'Carry bag for general sports and personal gear.'}
+ {id:'eye-protection',name:'Impact-rated full-seal goggles',category:'Advanced field safety',description:'Certified impact-rated eye protection. Check the exact standard and compatibility before use.'},
+ {id:'face-protection',name:'Protective face guard',category:'Advanced field safety',description:'Lower-face protection designed for supervised recreational field activities.'},
+ {id:'field-helmet',name:'Recreational protective helmet',category:'Advanced field safety',description:'Protective headgear for approved sport and training environments.'},
+ {id:'knee-elbow-pads',name:'Knee & elbow pad set',category:'Advanced field safety',description:'Padded joint protection for movement on supervised fields.'},
+ {id:'field-gloves',name:'Padded field gloves',category:'Advanced field safety',description:'General hand protection for recreational activities.'},
+ {id:'marshal-vest',name:'Field marshal high-visibility vest',category:'Venue safety',description:'High-visibility apparel to identify event staff and safety marshals.'},
+ {id:'first-aid-kit',name:'Venue first-aid kit',category:'Venue safety',description:'Basic first-aid supplies for activity venues.'},
+ {id:'team-jersey',name:'Team training jersey',category:'Apparel',description:'Team apparel for sport, training and community events.'},
+ {id:'hydration-pack',name:'Hydration pack',category:'Field accessories',description:'Water-carrying pack for outdoor sport activities.'},
+ {id:'sports-bag',name:'Protective equipment carry bag',category:'Field accessories',description:'Carry bag for general sports and personal protective equipment.'},
+ {id:'team-cap',name:'Team cap',category:'Apparel',description:'Community cap and team merchandise.'}
 ];
 let cart=JSON.parse(localStorage.getItem('bbgg_cart')||'[]');
 const moneylessCart=()=>{const count=cart.reduce((n,x)=>n+x.qty,0);$('cart-count').textContent=count+' item'+(count===1?'':'s');$('cart-lines').innerHTML=cart.length?cart.map(x=>'<div class="cart-line"><span>'+esc(x.name)+' × '+x.qty+'</span><button type="button" class="outline-btn" data-remove="'+esc(x.id)+'">Remove</button></div>').join(''):'<p class="cart-empty">Your cart is empty.</p>';localStorage.setItem('bbgg_cart',JSON.stringify(cart));};
