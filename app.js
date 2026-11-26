@@ -14,3 +14,20 @@ $('search-btn').addEventListener('click',()=>fetchVenues($('venue-search').value
 async function compliance(){const r=await supabase.from('market_controls').select('transactions_enabled,status,reason').eq('control_key','global').maybeSingle();if(!r.error&&r.data&&!r.data.transactions_enabled){const p=document.createElement('p');p.className='market-lock';p.textContent='GLOBAL TRANSACTIONS LOCKED — '+r.data.reason;document.querySelector('.compliance-list').append(p);}}
 await session();supabase.auth.onAuthStateChange(()=>{session();});await Promise.all([fetchVenues(),compliance()]);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+const marketItems=[
+ {id:'eye-protection',name:'Protective eyewear',category:'Field safety',description:'General eye protection for supervised recreational environments.'},
+ {id:'field-gloves',name:'Field gloves',category:'Apparel',description:'General-purpose gloves for outdoor activities.'},
+ {id:'team-jersey',name:'Team jersey',category:'Apparel',description:'Everyday team apparel and community merchandise.'},
+ {id:'first-aid-kit',name:'First-aid kit',category:'Safety',description:'Basic first-aid supplies for activity venues.'},
+ {id:'team-cap',name:'Team cap',category:'Apparel',description:'Community cap and team merchandise.'},
+ {id:'sports-bag',name:'Sports equipment bag',category:'Accessories',description:'Carry bag for general sports and personal gear.'}
+];
+let cart=JSON.parse(localStorage.getItem('bbgg_cart')||'[]');
+const moneylessCart=()=>{const count=cart.reduce((n,x)=>n+x.qty,0);$('cart-count').textContent=count+' item'+(count===1?'':'s');$('cart-lines').innerHTML=cart.length?cart.map(x=>'<div class="cart-line"><span>'+esc(x.name)+' × '+x.qty+'</span><button type="button" class="outline-btn" data-remove="'+esc(x.id)+'">Remove</button></div>').join(''):'<p class="cart-empty">Your cart is empty.</p>';localStorage.setItem('bbgg_cart',JSON.stringify(cart));};
+function renderProducts(q=''){const root=$('market-products');const rows=marketItems.filter(x=>(x.name+' '+x.category+' '+x.description).toLowerCase().includes(q.toLowerCase()));root.innerHTML=rows.map((x,i)=>'<article class="product-card"><div class="product-art">'+String(i+1).padStart(2,'0')+'</div><div class="product-copy"><small>'+esc(x.category.toUpperCase())+'</small><h3>'+esc(x.name)+'</h3><p>'+esc(x.description)+'</p><span class="tag">Sample listing · Not for sale yet</span><br><button class="gold-btn" type="button" data-add="'+esc(x.id)+'">Add to cart</button></div></article>').join('')||'<div class="search-empty">No matching merchandise.</div>';}
+$('market-products').addEventListener('click',e=>{const id=e.target.dataset.add;if(!id)return;const item=marketItems.find(x=>x.id===id);const line=cart.find(x=>x.id===id);if(line)line.qty++;else cart.push({...item,qty:1});moneylessCart();$('cart-panel').hidden=false;});
+$('cart-lines').addEventListener('click',e=>{const id=e.target.dataset.remove;if(!id)return;cart=cart.filter(x=>x.id!==id);moneylessCart();});
+$('market-search').addEventListener('input',e=>renderProducts(e.target.value));
+$('cart-toggle').addEventListener('click',()=>{$('cart-panel').hidden=!$('cart-panel').hidden;});
+$('cart-close').addEventListener('click',()=>$('cart-panel').hidden=true);
+renderProducts();moneylessCart();
