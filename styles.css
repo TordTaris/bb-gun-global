@@ -7,3 +7,59 @@
 
 .market-categories{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}.category-chip{border:1px solid var(--line);background:#17181b;color:#c9c4b8;padding:9px 13px;font:10px 'DM Sans',sans-serif;cursor:pointer}.category-chip.active{border-color:var(--gold);color:var(--gold);background:#282319}.product-photo{height:190px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 35%,#34302a,#111216 72%);border-bottom:1px solid var(--line);display:grid;place-items:center}.product-photo img{width:100%;height:100%;object-fit:contain;padding:12px;display:block}.product-photo>span{position:absolute;left:10px;bottom:9px;background:#101114e8;color:var(--gold);font-size:8px;letter-spacing:1.2px;padding:6px 8px}.image-credit{display:inline-block;color:#888;font-size:8px;letter-spacing:.2px;margin:0 0 10px}.product-details{margin:10px 0;color:#c7b98e;font-size:10px}.product-details summary{cursor:pointer;color:var(--gold);padding:6px 0}.product-details p{min-height:0;margin:6px 0;color:#aaa}.cart-line{display:flex;align-items:center;gap:12px}.cart-thumb{width:54px;height:46px;object-fit:contain;background:#111216;border:1px solid var(--line);padding:3px;flex:0 0 54px}.cart-item-name{flex:1}.cart-line.image-missing .cart-thumb{display:none}.product-photo.image-missing{background:linear-gradient(135deg,#27231d,#111216)}.product-photo.image-missing:after{content:'IMAGE PREVIEW UNAVAILABLE';font-size:9px;letter-spacing:1.5px;color:var(--gold)}
 @media(max-width:760px){.market-categories{gap:6px}.category-chip{padding:8px 10px;font-size:9px}.product-photo{height:210px}.cart-thumb{width:46px;height:42px;flex-basis:46px}}
+
+/* BB GUN GLOBAL visual refresh */
+:root{--gold:#e0bd72;--bg:#0b0d11;--panel:#151820;--line:#2b303a}
+body{background:radial-gradient(ellipse at 50% -15%,#292116 0%,#0b0d11 48%);background-attachment:fixed}
+.topbar{position:sticky;top:0;z-index:20;background:#0b0d11ed;backdrop-filter:blur(16px);border-bottom-color:#4a3b24}
+.brand-mark{width:42px;height:42px;background:linear-gradient(145deg,#292319,#111319);box-shadow:0 0 22px #d9b56820}
+.hero{min-height:620px;padding-top:75px;padding-bottom:72px;background:radial-gradient(ellipse at 78% 48%,#4b3520 0%,#1a1713 25%,#0b0d11 66%)}
+.hero h1{font-size:clamp(48px,6vw,82px);letter-spacing:-2.5px}
+.hero .lead{font-size:15px;max-width:480px}
+.hero-product-stage{height:440px;border:1px solid #9c7a3b55;border-radius:4px;background:linear-gradient(145deg,#29241c,#11151c 65%);box-shadow:0 24px 80px #0009,inset 0 0 55px #c29b4b12}
+.hero-product-stage img{position:relative;z-index:2;width:92%;height:78%;object-fit:contain;filter:drop-shadow(0 22px 30px #000b)}
+.hero-glow{position:absolute;width:310px;height:310px;border-radius:50%;background:#c28e3b20;filter:blur(48px)}
+.hero-ring{position:absolute;width:82%;height:68%;border:1px solid #d7b46a45;border-radius:50%;transform:rotate(-22deg)}
+.hero-product-stage .panel-label{z-index:3;left:7%;bottom:22px;padding:13px 17px;background:#0b0d11d9;border-left:2px solid var(--gold);backdrop-filter:blur(10px)}
+.hero-product-stage .panel-label strong{font-size:24px}
+.hero-actions .gold-btn{box-shadow:0 8px 28px #d7b46a30;transition:transform .2s,box-shadow .2s}
+.hero-actions .gold-btn:hover{transform:translateY(-2px);box-shadow:0 12px 34px #d7b46a48}
+.marketplace{padding-top:76px}
+.marketplace .section-heading{align-items:center}
+.marketplace .section-heading h2{font-size:48px}
+.catalog-note{font-size:9px;letter-spacing:1.5px;color:var(--gold);border:1px solid #806a3d;padding:11px 14px}
+.market-toolbar{background:linear-gradient(110deg,#1a1d24,#111319);border-color:#39352c;border-radius:3px}
+.market-toolbar input{border-radius:2px}
+.market-categories{margin:0 0 24px}
+.category-chip{border-radius:2px;text-transform:uppercase;letter-spacing:1px;font-size:9px}
+.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.product-card{overflow:hidden;border-radius:3px;background:linear-gradient(160deg,#1a1e26,#111319);border-color:#343943;transition:transform .25s,border-color .25s,box-shadow .25s}
+.product-card:hover{transform:translateY(-5px);border-color:#9b7a42;box-shadow:0 20px 40px #0008}
+.product-photo{height:285px;background:radial-gradient(ellipse at 50% 42%,#454039 0%,#20242b 48%,#101319 100%);border-bottom-color:#39352d}
+.product-photo img{padding:18px;transition:transform .35s;filter:drop-shadow(0 12px 16px #0008)}
+.product-card:hover .product-photo img{transform:scale(1.045)}
+.product-photo>span{background:#0b0d11e8;border:1px solid #6e5934}
+.product-copy{padding:24px}
+.product-copy small{letter-spacing:1.6px}
+.product-copy h3{font-size:26px}
+.product-copy p{font-size:12px;min-height:54px}
+.product-copy .tag{border-color:#8b6e3d;background:#d7b46a0c;color:#e3c783}
+.product-copy .outline-btn:disabled{display:inline-block;border-color:#78613b;color:#d7b46a;background:#17150f}
+.product-details{border-top:1px solid #343943;padding-top:7px}
+.market-intro{max-width:620px}
+#venues,#discover{display:none!important}
+.account-section{background:linear-gradient(110deg,#14171d,#101217);border-top:1px solid #2d3036}
+.compliance{background:linear-gradient(115deg,#191b20,#111319);border-top:1px solid #383126;border-bottom:1px solid #383126}
+@media(max-width:760px){
+ .hero{min-height:auto;padding:56px 7vw 38px;gap:10px}
+ .hero h1{font-size:51px}
+ .hero-product-stage{height:300px;margin-top:12px}
+ .hero-product-stage img{height:74%;width:96%}
+ .hero-product-stage .panel-label{bottom:12px}
+ .hero-product-stage .panel-label strong{font-size:20px}
+ .marketplace{padding-top:58px}
+ .marketplace .section-heading h2{font-size:36px}
+ .product-grid{grid-template-columns:1fr;gap:16px}
+ .product-photo{height:245px}
+ .catalog-note{align-self:flex-start}
+}
