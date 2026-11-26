@@ -12,34 +12,35 @@
 <body>
   <header class="topbar">
     <a class="brand" href="./" aria-label="BB GUN GLOBAL home"><span class="brand-mark">BG</span><span>BB GUN <b>GLOBAL</b></span></a>
-    <nav><a href="#discover">Discover</a><a href="#venues">Venues</a><a href="#marketplace">Marketplace</a><a href="#compliance">Compliance</a></nav>
+    <nav><a href="#marketplace">BB GUN COLLECTION</a><a href="#account">Members</a><a href="#compliance">Safety &amp; Compliance</a></nav>
     <a class="outline-btn" href="#partners">Partner with us</a>
   </header>
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">THE GLOBAL AIRSOFT NETWORK</p>
-        <h1>Play responsibly.<br><em>Connect globally.</em></h1>
-        <p class="lead">Discover verified airsoft venues, rental experiences and production partners — with local rules at the centre of every journey.</p>
-        <div class="hero-actions"><a class="gold-btn" href="#venues">Explore venues <span>↗</span></a><a class="text-btn" href="#compliance">Our compliance standard</a></div>
-        <div class="trust-line"><span class="pulse"></span> Compliance-first · Country-by-country access</div>
+        <p class="eyebrow">BB GUN GLOBAL · THE COLLECTION</p>
+        <h1>Explore the<br><em>BB Gun world.</em></h1>
+        <p class="lead">A premium global showcase for BB Gun and Airsoft replicas. Explore product categories, discover visual references and follow responsible ownership standards.</p>
+        <div class="hero-actions"><a class="gold-btn" href="#marketplace">Explore collection <span>↗</span></a><a class="text-btn" href="#compliance">Safety &amp; compliance</a></div>
+        <div class="trust-line"><span class="pulse"></span> Information-only catalogue · Transactions currently disabled</div>
       </div>
-      <div class="hero-panel">
-        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="planet"><span>BG</span></div>
-        <div class="panel-label"><small>GLOBAL NETWORK</small><strong>One responsible community.</strong><span>Venue discovery · Rental information · Partner services</span></div>
+      <div class="hero-panel hero-product-stage">
+        <div class="hero-glow"></div><div class="hero-ring"></div>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg" alt="Airsoft replica collection visual reference" loading="eager">
+        <div class="panel-label"><small>FEATURED CATEGORY</small><strong>BB Gun &amp; Airsoft</strong><span>Replica showcase · Product information · Compliance first</span></div>
       </div>
     </section>
     <section class="account-section" id="account"><div><p class="eyebrow">MEMBER ACCESS</p><h2>Your global airsoft hub</h2><p>Create an account to submit a venue or partner application. Submissions stay private until reviewed.</p></div><div class="account-card"><div id="auth-panel"><div class="auth-tabs"><button class="auth-tab active" data-mode="signin">Sign in</button><button class="auth-tab" data-mode="signup">Create account</button></div><form id="auth-form"><label>Email<input id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label>Password<input id="auth-password" type="password" minlength="8" required placeholder="At least 8 characters"></label><button class="gold-btn" id="auth-submit">Sign in</button></form><p class="form-note">Email confirmation may be required.</p></div><div id="member-panel" hidden><p class="eyebrow">SIGNED IN</p><strong id="member-email"></strong><p class="form-note">Your account can submit listings for review.</p><button id="signout-btn" class="outline-btn" type="button">Sign out</button></div><p id="auth-message" class="form-message" role="status"></p></div></section>
-    <section class="stats" id="discover"><div><strong>01</strong><span>Discover local venues</span></div><div><strong>02</strong><span>Review rental requirements</span></div><div><strong>03</strong><span>Check local regulations</span></div><div><strong>04</strong><span>Connect with verified partners</span></div></section>
-    <section class="section" id="venues">
+    <section class="stats" id="discover" hidden><div><strong>01</strong><span>Discover local venues</span></div><div><strong>02</strong><span>Review rental requirements</span></div><div><strong>03</strong><span>Check local regulations</span></div><div><strong>04</strong><span>Connect with verified partners</span></div></section>
+    <section class="section" id="venues" hidden>
       <div class="section-heading"><div><p class="eyebrow">FIND YOUR NEXT EXPERIENCE</p><h2>Explore the network</h2></div><span class="status">Directory preview</span></div>
       <div class="searchbar"><label for="venue-search">Search by city, country or venue</label><div><input id="venue-search" type="search" placeholder="e.g. Bangkok, Singapore, indoor arena"><button id="search-btn" class="gold-btn">Search</button></div></div>
       <div id="venue-results" class="venue-grid"><article class="venue-card"><div class="venue-art art-one">01 <span>VENUE DIRECTORY</span></div><div class="venue-info"><small>VENUE DISCOVERY</small><h3>Find a local field</h3><p>Explore participating venues and review their published safety and entry requirements.</p><span class="tag">Directory opening soon</span></div></article><article class="venue-card"><div class="venue-art art-two">02 <span>RENTAL EXPERIENCES</span></div><div class="venue-info"><small>RENTAL INFORMATION</small><h3>Try before you own</h3><p>Find venues that publish supervised rental options for field play and production use.</p><span class="tag">Partner listings pending</span></div></article><article class="venue-card"><div class="venue-art art-three">03 <span>PRODUCTION PARTNERS</span></div><div class="venue-info"><small>FILM &amp; MUSIC VIDEO</small><h3>Production support</h3><p>Connect with venues and qualified providers for controlled on-set experiences.</p><span class="tag">Partner listings pending</span></div></article></div>
     </section>
 
     <section class="marketplace section" id="marketplace">
-      <div class="section-heading"><div><p class="eyebrow">BB GUN GLOBAL MARKETPLACE</p><h2>Shop within the network</h2><p class="market-intro">Browse approved general merchandise and field essentials. Regulated products are not listed for purchase.</p></div><span class="status">Demo storefront</span></div>
-      <div class="market-toolbar"><div><label for="market-search">Find merchandise</label><input id="market-search" type="search" placeholder="Search BB Gun, replicas, safety gear, apparel..."></div><div class="cart-summary"><span>Cart</span><strong id="cart-count">0 items</strong><button id="cart-toggle" class="outline-btn" type="button">View cart</button></div></div>
+      <div class="section-heading"><div><p class="eyebrow">BB GUN GLOBAL MARKETPLACE</p><h2>BB Gun collection</h2><p class="market-intro">Explore BB Gun and Airsoft replica references in one dedicated catalogue. Images are illustrative; product availability and legality vary by country.</p></div><span class="status">Demo storefront</span></div>
+      <div class="market-toolbar"><div><label for="market-search">Search BB Gun models &amp; categories</label><input id="market-search" type="search" placeholder="Search pistol, rifle, Airsoft..."></div><div class="catalog-note">CATALOGUE PREVIEW · NO SALES</div></div>
       <div id="market-categories" class="market-categories" aria-label="Product categories"></div>
       <div id="market-products" class="product-grid">
         <article class="product-card"><div class="product-art">01</div><div class="product-copy"><small>FIELD SAFETY</small><h3>Protective eyewear</h3><p>General eye protection for supervised recreational environments.</p><span class="tag">Sample listing</span></div></article>
