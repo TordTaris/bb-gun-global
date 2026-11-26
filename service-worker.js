@@ -1,4 +1,4 @@
-const CACHE = 'bb-gun-global-shell-v5';
+const CACHE = 'bb-gun-global-shell-v6';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest'];
 
 self.addEventListener('install', event => {
