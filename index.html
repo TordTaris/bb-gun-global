@@ -1,62 +1,60 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b10">
-  <meta name="description" content="BB GUN GLOBAL — an information-first directory for BB Gun and airsoft replica categories, venues and responsible use.">
-  <title>BB GUN GLOBAL | Explore Responsibly</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./styles.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090909">
+<meta name="description" content="BB GUN GLOBAL — ข้อมูล BB Gun ความปลอดภัย และกฎหมายอย่างรับผิดชอบ">
+<title>BB GUN GLOBAL | Play Safe · Know the Law</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="stylesheet" href="./styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#home" aria-label="BB GUN GLOBAL home"><span class="brand-mark">◎</span><span><strong>BB GUN</strong><b>GLOBAL</b><small>PLAY SAFE · KNOW THE LAW</small></span></a>
-    <nav aria-label="Main navigation"><a href="#collection">Collection</a><a href="#venues">Venues</a><a href="#compliance">Safety &amp; law</a></nav>
-    <a class="nav-cta" href="#account">Member access <span>↗</span></a>
-  </header>
-  <main id="home">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow"><span></span> A GLOBAL BB GUN INFORMATION HUB</p>
-        <h1>Explore the<br><em>BB Gun world.</em></h1>
-        <p class="lead">Discover BB Gun and airsoft replica categories, learn responsible-use basics and find participating venues. Built around local rules, safety and transparency.</p>
-        <div class="hero-actions"><a class="gold-btn" href="#collection">Explore collection <span>↗</span></a><a class="quiet-link" href="#compliance">Read safety standards</a></div>
-        <div class="hero-note"><span class="live-dot"></span> INFORMATION &amp; MEMBERSHIP ONLY <i>·</i> TRANSACTIONS DISABLED</div>
-      </div>
-      <div class="hero-art">
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Airsoftguns.jpg" alt="Illustrative display of airsoft replicas" loading="eager" referrerpolicy="no-referrer">
-        <div class="hero-shade"></div><div class="hero-caption"><small>THE BB GUN COLLECTION</small><strong>Explore. Understand. Play responsibly.</strong><span>Illustrative imagery · No products offered for sale</span></div>
-        <div class="hero-index">GLOBAL / 001</div>
-      </div>
-    </section>
-    <section class="trust-strip" aria-label="Platform principles"><div><b>01</b><span>Information first</span></div><div><b>02</b><span>Country-by-country review</span></div><div><b>03</b><span>Responsible use</span></div><div><b>04</b><span>Transactions locked</span></div></section>
-
-    <section class="section collection" id="collection">
-      <div class="section-heading"><div><p class="eyebrow">THE COLLECTION</p><h2>BB Gun categories</h2><p>Browse illustrative category references. Images do not represent verified stock, offers or legal approval.</p></div><span class="section-index">01 / CATALOGUE</span></div>
-      <div class="catalog-tools"><label class="search-field"><span>⌕</span><input id="market-search" type="search" placeholder="Search BB Gun categories..." aria-label="Search BB Gun categories"></label><div id="market-categories" class="category-filters" aria-label="Filter categories"></div></div>
-      <div id="market-products" class="product-grid" aria-live="polite"></div>
-      <p class="catalog-footnote">All listings are informational samples. No purchase, rental, reservation, payment or fulfilment is available on this platform.</p>
-    </section>
-
-    <section class="section account-section" id="account">
-      <div class="account-copy"><p class="eyebrow">MEMBER ACCESS</p><h2>A global community.<br><em>Built on responsibility.</em></h2><p>Members can submit venue and partner information for review. Submissions are not published until independently checked.</p><div class="member-points"><span>✓ Secure email sign-in</span><span>✓ Partner applications</span><span>✓ Review before publication</span></div></div>
-      <div class="account-card"><div id="auth-panel"><div class="auth-tabs"><button class="auth-tab active" data-mode="signin" type="button">Sign in</button><button class="auth-tab" data-mode="signup" type="button">Create account</button></div><form id="auth-form"><label>Email address<input id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label>Password<input id="auth-password" type="password" minlength="8" autocomplete="current-password" required placeholder="At least 8 characters"></label><button class="gold-btn full-btn" id="auth-submit" type="submit">Sign in <span>↗</span></button></form><p class="form-note">Email confirmation may be required.</p></div><div id="member-panel" hidden><p class="eyebrow">SIGNED IN</p><strong id="member-email"></strong><p class="form-note">Your account can submit a venue or partner application for review.</p><button id="signout-btn" class="quiet-button" type="button">Sign out</button></div><p id="auth-message" class="form-message" role="status"></p></div>
-    </section>
-
-    <section class="section venues-section" id="venues">
-      <div class="section-heading"><div><p class="eyebrow">DISCOVER RESPONSIBLY</p><h2>Participating venues</h2><p>Only listings marked published and compliance-approved appear here.</p></div><span class="section-index">02 / DIRECTORY</span></div>
-      <div class="venue-search"><label for="venue-search">Search by city, region or country</label><div><input id="venue-search" type="search" placeholder="e.g. Bangkok, TH"><button id="search-btn" class="gold-btn" type="button">Search <span>↗</span></button></div></div>
-      <div id="venue-results" class="venue-grid"><div class="empty-state"><span>◎</span><strong>Verified directory</strong><p>Approved venue listings will appear here when available.</p></div></div>
-    </section>
-
-    <section class="compliance" id="compliance">
-      <div class="compliance-copy"><p class="eyebrow">COMPLIANCE BY DESIGN</p><h2>One world.<br><em>Different laws.</em></h2><p>BB Gun and airsoft replica rules vary by jurisdiction. Classification, age limits, permitted use, transport, import and export requirements must be checked with the relevant local authorities before taking action.</p><span class="compliance-note">This platform does not provide legal advice or confirm that any item is lawful in your location.</span></div>
-      <div class="compliance-steps"><div><b>01</b><span><strong>Country information</strong><small>Local rules and restrictions</small></span><i>Review required</i></div><div><b>02</b><span><strong>Venue verification</strong><small>Identity, safety and operating details</small></span><i>Pending</i></div><div><b>03</b><span><strong>Partner verification</strong><small>Business and compliance checks</small></span><i>Pending</i></div><div><b>04</b><span><strong>Transactions</strong><small>Not available on this platform</small></span><i class="locked">LOCKED</i></div></div>
-    </section>
-
-    <section class="section partner-section" id="partners"><div><p class="eyebrow">WORK WITH BB GUN GLOBAL</p><h2>For venues &amp; partners</h2><p>Submit your organization for an initial review. Submission does not grant approval or enable transactions.</p></div><form id="partner-form" class="partner-form"><label>Organization name<input id="partner-name" required minlength="2" maxlength="180" placeholder="Organization"></label><label>Partner type<select id="partner-type"><option value="venue">Venue</option><option value="retailer">Retailer</option><option value="warehouse">Warehouse / fulfilment</option><option value="service_provider">Service provider</option><option value="production_studio">Production studio</option></select></label><label>Country code<input id="partner-country" required maxlength="2" minlength="2" placeholder="TH"></label><label>Website (optional)<input id="partner-website" type="url" placeholder="https://"></label><button class="gold-btn full-btn" type="submit">Submit for review <span>↗</span></button><p id="partner-message" class="form-message" role="status"></p></form></section>
-  </main>
-  <footer><a class="brand" href="#home"><span class="brand-mark">◎</span><span><strong>BB GUN</strong><b>GLOBAL</b><small>PLAY SAFE · KNOW THE LAW</small></span></a><span>© <span id="year"></span> BB GUN GLOBAL</span><span>Information-only platform · Transactions disabled</span></footer>
-  <script type="module" src="./app.js"></script>
+<header class="site-header" id="home">
+ <a class="logo" href="#home"><span class="logo-scope">◎</span><span class="logo-type"><strong>BB GUN</strong><b>GLOBAL</b><small>Play Safe · Know the Law · Enjoy Responsibly</small></span></a>
+ <nav class="main-nav" aria-label="เมนูหลัก">
+  <a class="active" href="#home"><span>⌂</span>หน้าหลัก</a><a href="#categories"><span>▦</span>สินค้า</a><a href="#knowledge"><span>ⓘ</span>ความรู้</a><a href="#law"><span>⬡</span>กฎหมาย</a><a href="#help"><span>?</span>ช่วยเหลือ</a><a href="#account"><span>♟</span>สมาชิก</a>
+ </nav>
+ <button class="mobile-menu" id="mobile-menu" aria-label="เปิดเมนู">☰</button>
+</header>
+<main>
+<section class="hero-banner">
+ <div class="hero-copy"><span class="hero-kicker">THAILAND · GLOBAL COMMUNITY</span>
+  <h1>BB Gun <span>คุณภาพระดับโลก</span><br><em>สำหรับนักกีฬาและผู้ที่ชื่นชอบ</em></h1>
+  <p>เลือกสรรเฉพาะ BB Gun เท่านั้น<br>ด้วยมาตรฐานความปลอดภัยและความรับผิดชอบ</p>
+  <a class="gold-ribbon" href="#law">เล่นอย่างปลอดภัย&nbsp; รู้กฎหมาย&nbsp; เพื่อสังคมที่ดีกว่า <b>↗</b></a>
+  <small class="hero-disclaimer">แพลตฟอร์มข้อมูลและสมาชิก · ยังไม่เปิดซื้อขายหรือเช่า</small>
+ </div>
+ <div class="planet-art" aria-hidden="true"><div class="planet"></div><div class="planet-glow"></div><div class="mountains"></div><div class="starfield"></div></div>
+ <div class="hero-corner">BB GUN GLOBAL <span>INFORMATION HUB</span></div>
+</section>
+<section class="category-row" id="categories" aria-label="หมวดหมู่ BB Gun">
+ <a class="category-tile" href="#catalogue" data-filter="Pistol"><div class="category-visual pistol-visual"><span>◈</span></div><strong>ปืนพก</strong><small>(Pistol)</small></a>
+ <a class="category-tile" href="#catalogue" data-filter="Rifle"><div class="category-visual rifle-visual"><span>⌁</span></div><strong>ปืนไรเฟิล</strong><small>(Rifle)</small></a>
+ <a class="category-tile" href="#catalogue" data-filter="SMG"><div class="category-visual smg-visual"><span>⌗</span></div><strong>ปืนกลมือ</strong><small>(SMG)</small></a>
+ <a class="category-tile" href="#catalogue" data-filter="Sniper"><div class="category-visual sniper-visual"><span>⊹</span></div><strong>ปืนซุ่มยิง</strong><small>(Sniper)</small></a>
+ <a class="category-tile" href="#catalogue" data-filter="Shotgun"><div class="category-visual shotgun-visual"><span>⌖</span></div><strong>ปืนลูกซอง</strong><small>(Shotgun)</small></a>
+ <a class="category-tile" href="#catalogue" data-filter="Other"><div class="category-visual other-visual"><span>✧</span></div><strong>BB Gun อื่น ๆ</strong><small>(Other)</small></a>
+</section>
+<section class="featured-section" id="catalogue">
+ <div class="featured-heading"><h2><span>★</span> สินค้าแนะนำ</h2><a href="#catalogue" id="show-all">ดูหมวดหมู่ทั้งหมด <b>➜</b></a></div>
+ <div class="catalogue-tools"><input id="market-search" type="search" placeholder="ค้นหาหมวดหมู่ BB Gun..." aria-label="ค้นหาหมวดหมู่"><div id="market-categories" class="category-filters"></div></div>
+ <div id="market-products" class="featured-grid" aria-live="polite"></div>
+ <p class="catalogue-note">ภาพและหมวดหมู่ใช้เพื่อให้ข้อมูลเท่านั้น ไม่ใช่รายการสินค้าที่มีจำหน่าย ไม่มีราคา คำสั่งซื้อ หรือบริการเช่า</p>
+</section>
+<section class="info-panels" id="knowledge">
+ <a class="info-panel" href="#law"><span class="info-icon">⚖</span><span><strong>กฎหมายที่เกี่ยวข้อง</strong><small>ศึกษาข้อมูลและข้อกำหนด<br>การใช้งานอย่างถูกต้อง</small><b>อ่านเพิ่มเติม&nbsp; →</b></span></a>
+ <a class="info-panel" href="#safety"><span class="info-icon shield">⬡</span><span><strong>การใช้งานอย่างปลอดภัย</strong><small>ปฏิบัติตามคำแนะนำ<br>เพื่อความปลอดภัย</small><b>อ่านเพิ่มเติม&nbsp; →</b></span></a>
+ <a class="info-panel" href="#community"><span class="info-icon">♧</span><span><strong>ร่วมสร้างสังคมที่ดี</strong><small>ใช้ BB Gun อย่างมีความรับผิดชอบ<br>เคารพกติกาและผู้อื่น</small><b>อ่านเพิ่มเติม&nbsp; →</b></span></a>
+</section>
+<section class="bottom-banner" id="community"><div class="banner-silhouette"></div><div><strong>BB GUN GLOBAL</strong><em>More Than a Hobby... It’s a Responsible Lifestyle</em></div><div class="banner-globe">◎</div></section>
+<section class="below-fold">
+ <div class="mini-section" id="law"><h2>กฎหมายและข้อกำหนด</h2><p>กฎหมายเกี่ยวกับ BB Gun แตกต่างกันในแต่ละประเทศและพื้นที่ โปรดตรวจสอบประเภทอุปกรณ์ อายุผู้ใช้งาน การครอบครอง การขนส่ง และการใช้งานกับหน่วยงานท้องถิ่นก่อนดำเนินการใด ๆ</p><p class="legal-note">ข้อมูลนี้ไม่ใช่คำปรึกษาทางกฎหมาย และไม่ได้รับรองว่าสินค้าหรือกิจกรรมใดถูกกฎหมายในทุกพื้นที่</p></div>
+ <div class="mini-section" id="safety"><h2>ความปลอดภัย</h2><p>ปฏิบัติตามกฎของสนาม ใช้อุปกรณ์ป้องกันที่เหมาะสม ไม่เล็งไปยังบุคคลหรือสัตว์นอกกิจกรรมที่ได้รับอนุญาต และจัดเก็บอุปกรณ์อย่างปลอดภัย</p></div>
+ <div class="mini-section" id="help"><h2>ช่วยเหลือและสนาม</h2><p>ระบบทำเนียบสนามจะแสดงเฉพาะสถานที่ที่ได้รับการตรวจสอบและอนุมัติให้เผยแพร่แล้ว</p><div id="venue-results" class="venue-results"></div></div>
+ <div class="mini-section member-section" id="account"><div><h2>สมาชิก BB GUN GLOBAL</h2><p>สมัครสมาชิกเพื่อรับข้อมูลและส่งคำขอข้อมูลสนามหรือพันธมิตรเพื่อรอตรวจสอบ</p></div><div class="account-card"><div id="auth-panel"><div class="auth-tabs"><button class="auth-tab active" data-mode="signin" type="button">เข้าสู่ระบบ</button><button class="auth-tab" data-mode="signup" type="button">สมัครสมาชิก</button></div><form id="auth-form"><label>อีเมล<input id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com"></label><label>รหัสผ่าน<input id="auth-password" type="password" minlength="8" required placeholder="อย่างน้อย 8 ตัวอักษร"></label><button class="gold-button" id="auth-submit" type="submit">เข้าสู่ระบบ</button></form></div><div id="member-panel" hidden><strong id="member-email"></strong><button id="signout-btn" type="button" class="outline-button">ออกจากระบบ</button></div><p id="auth-message" class="form-message" role="status"></p></div></section>
+ <section class="mini-section partner-section"><div><h2>สมัครเป็นพันธมิตร</h2><p>ข้อมูลจะถูกส่งเพื่อการตรวจสอบเท่านั้น ไม่ถือเป็นการอนุมัติหรือเปิดสิทธิ์ทำธุรกรรม</p></div><form id="partner-form" class="partner-form"><label>ชื่อองค์กร<input id="partner-name" required minlength="2"></label><label>ประเภท<select id="partner-type"><option value="venue">สนาม</option><option value="retailer">ผู้ประกอบการ</option><option value="service_provider">ผู้ให้บริการ</option><option value="production_studio">สตูดิโอ</option></select></label><label>รหัสประเทศ<input id="partner-country" required minlength="2" maxlength="2" placeholder="TH"></label><label>เว็บไซต์ (ถ้ามี)<input id="partner-website" type="url" placeholder="https://"></label><button class="gold-button" type="submit">ส่งข้อมูลเพื่อตรวจสอบ</button><p id="partner-message" class="form-message" role="status"></p></form></section>
+</section>
+</main>
+<footer><a class="footer-logo" href="#home"><span>◎</span><b>BB GUN<br>GLOBAL</b></a><nav><a href="#home">หน้าหลัก</a><a href="#categories">สินค้า</a><a href="#knowledge">ความรู้</a><a href="#law">กฎหมาย</a><a href="#help">ช่วยเหลือ</a><a href="#account">สมาชิก</a></nav><div class="footer-safe"><span>✓</span><b>ปลอดภัย ไว้ใจได้<small>ด้วยมาตรฐานสากล</small></b></div><small class="copyright">© <span id="year"></span> BB GUN GLOBAL · INFORMATION ONLY · TRANSACTIONS DISABLED</small></footer>
+<script type="module" src="./app.js"></script>
 </body></html>
